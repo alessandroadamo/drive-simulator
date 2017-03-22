@@ -1,4 +1,4 @@
-package org.vodafone.tripsimulator
+package drivesimulator
 
 import org.scalatest.{FlatSpec, Matchers}
 import scala.math._

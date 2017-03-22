@@ -1,4 +1,4 @@
-package org.vodafone.tripsimulator
+package drivesimulator
 
 /**
   * Created by alessandro on 23/02/17.

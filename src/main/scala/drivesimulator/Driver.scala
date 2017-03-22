@@ -1,4 +1,4 @@
-package org.vodafone.tripsimulator
+package drivesimulator
 
 import scala.math._
 

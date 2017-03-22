@@ -1,4 +1,4 @@
-package org.vodafone.tripsimulator
+package drivesimulator
 
 object Path {
 
