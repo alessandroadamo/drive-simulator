@@ -127,7 +127,7 @@ class Driver(path: Path, fs: Double = 1.0) {
       // Elevation
       val urlElevation = "https://maps.googleapis.com/maps/api/elevation/xml?" +
         "locations=" + str +
-        "&key=" + Path.APP_KEY
+        "&key=" + AppKey.APP_KEY
 
       val xmlElevation = scala.xml.XML.loadString(
         scala.io.Source.fromURL(urlElevation).mkString

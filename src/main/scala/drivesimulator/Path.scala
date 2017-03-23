@@ -2,8 +2,6 @@ package drivesimulator
 
 object Path {
 
-  /// Google APP KEY
-  lazy val APP_KEY = "AIzaSyB-XuccMIMxy969Hhwb8paAXCO0MTKWG2Y"
   lazy val CHUNK_SIZE = 250
   lazy val WINDOW_SIZE = 5
 
@@ -119,7 +117,7 @@ class Path(from: (Double, Double), to: (Double, Double)) {
     val url = "https://maps.googleapis.com/maps/api/directions/xml?" +
       "origin=" + orig +
       "&destination=" + dest +
-      "&key=" + Path.APP_KEY
+      "&key=" + AppKey.APP_KEY
 
     val xml = scala.xml.XML.loadString(
       scala.io.Source.fromURL(url).mkString
@@ -164,7 +162,7 @@ class Path(from: (Double, Double), to: (Double, Double)) {
       // Elevation
       val urlElevation = "https://maps.googleapis.com/maps/api/elevation/xml?" +
         "locations=" + str +
-        "&key=" + Path.APP_KEY
+        "&key=" + AppKey.APP_KEY
 
       val xmlElevation = scala.xml.XML.loadString(
         scala.io.Source.fromURL(urlElevation).mkString
