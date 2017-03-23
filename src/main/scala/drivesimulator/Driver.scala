@@ -44,9 +44,22 @@ object Driver {
     val d = sqrt(pow(p1._1 - p3._1, 2.0) + pow(p1._2 - p3._2, 2.0) + pow(p1._3 - p3._3, 2.0))
     val k = (2.0 * sin(alpha)) / (d + Driver.EPS) // curvature
 
-    1.0 / (k + Driver.EPS)
+    rotationDirection(pt1, pt2, pt3) / (k + Driver.EPS)
 
   }
+
+
+  /**
+    * Roration direction of a triangle
+    *
+    * @param pt1 First point
+    * @param pt2 Second point
+    * @param pt3 Third point
+    * @return Sign of rotation. The value is -1.0 if the rotation direction is left, 1.0 if is wright and 0.0 otherwhise
+    *
+    * */
+  def rotationDirection(pt1: (Double, Double), pt2: (Double, Double), pt3: (Double, Double)): Double =
+    - signum((pt2._1 - pt1._1) * (pt3._2 - pt1._2) - (pt3._1 - pt1._1) * (pt2._2 - pt1._2))
 
 }
 

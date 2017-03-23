@@ -1,41 +1,86 @@
 package drivesimulator
 
+import java.io.{File, FileNotFoundException, PrintWriter}
+import java.nio.file.{Files, Paths}
+
 /**
   * Created by alessandro on 23/02/17.
   */
-object Main extends App {
+object Main {
 
-  //def main(args: Array[String]): Unit = {
+  val usage =
+    """
+       Usage: drive-simulator --from num --to num --out-dir dirname --out-filename filename
+    """.stripMargin
 
-  var from = (38.339101, 15.864459)
-  //val from = (45.499383, 8.926511)
-  var to = (38.372488, 15.867626)
-  //val to = (45.499876, 8.930690)
+  def main(args: Array[String]): Unit = {
 
-  val sim = new Path(from, to)
+    if (args.length != 8) {
+      println(usage)
+      System.exit(0)
+    }
 
-//  sim.path foreach println
+    var from = ""
+    var to = ""
+    var dir = ""
+    var filename = ""
 
-  import java.io._
-/*
-  val pw = new PrintWriter(new File("/home/user/Desktop/test.kml"))
-  pw.write(sim.toKML)
-  pw.close()
-*/
+    args.sliding(2, 1).toList.collect {
+      case Array("--from", argFrom: String) => from = argFrom
+      case Array("--to", argTo: String) => to = argTo
+      case Array("--out-dir", argDir: String) => dir = argDir
+      case Array("--out-filename", argFilename: String) => filename = argFilename
+    }
 
-  val driver = new Driver(sim)
+    var fromTuple = (0.0, 0.0)
+    var toTuple = (0.0, 0.0)
 
-  val trip = new PrintWriter(new File("/home/user/Desktop/trip.kml"))
-  trip.write(driver.toKML)
-  trip.close()
+    try {
 
-  driver.trip.foreach(x => println (f"(${x.position._1}%3.6f, ${x.position._2}%3.6f): vel: ${x.velocity * 3.6}%4.2f ele: ${x.altitude}%4.2f "))
+      val arrFrom = from.split(",")
+      if (arrFrom.length != 2)
+        throw new IllegalArgumentException (from + " is not a valid lat,lon string")
+      fromTuple = (arrFrom(0).toDouble, arrFrom(1).toDouble)
 
-  val tripCSV = new PrintWriter(new File("/home/user/Desktop/trip.csv"))
-  tripCSV.write(driver.toCSV())
-  tripCSV.close()
+      val arrTo = to.split(",")
+      if (arrTo.length != 2)
+        throw new IllegalArgumentException (to + " is not a valid lat,lon string")
+      toTuple = (arrTo(0).toDouble, arrTo(1).toDouble)
 
-  println(Driver.curvatureRadius((45.627899, 8.842758), (45.627712, 8.842920), (45.627755, 8.843183)))
-  println(Driver.curvatureRadius((45.627779, 8.843363), (45.627741, 8.843457), (45.627700, 8.843572)))
+      if (!Files.exists(Paths.get(dir)))
+        throw new FileNotFoundException(dir + " does not exist!")
+
+    } catch {
+      case e: IllegalArgumentException =>
+        System.err.println(e)
+        System.exit(1)
+      case e: NumberFormatException =>
+        System.err.println(e)
+        System.exit(1)
+      case e: FileNotFoundException =>
+        System.err.println(e)
+        System.exit(1)
+    }
+
+    // Trip generation
+    print("Trip generation: ... ")
+    val path = new Path(fromTuple, toTuple)
+    val driver = new Driver(path)
+    println("DONE!")
+
+    // Trip saving
+    print("Saving the KML file: ... ")
+    val pwkml = new PrintWriter(new File(dir + File.separator + filename + ".kml"))
+    pwkml.write(driver.toKML)
+    pwkml.close()
+    println("DONE!")
+
+    print("Saving the CSV file: ... ")
+    val pwcsv = new PrintWriter(new File(dir + File.separator + filename + ".csv"))
+    pwcsv.write(driver.toCSV())
+    pwcsv.close()
+    println("DONE!")
+
+  }
 
 }
