@@ -13,7 +13,8 @@ case class PathStep(from: (Double, Double),
                     velocity: Double,
                     deltaDistance: Double, // variational
                     deltaTime: Double, // variational
-                    deltaElevation: Double) { // variational
+                    deltaElevation: Double) {
+  // variational
 
   override def toString: String = "(" + from._1 + ", " +
     from._2 + "), " +
@@ -136,6 +137,15 @@ class Path(from: (Double, Double), to: (Double, Double)) {
         (st \ "distance" \ "value").text.toDouble / (st \ "duration" \ "value").text.toDouble,
         (st \ "polyline" \ "points").text
       )
+
+    try {
+      if (steps.size <= 1)
+        throw new IllegalArgumentException("Too few steps founded!")
+    } catch {
+      case e: IllegalArgumentException =>
+        System.err.println(e)
+        System.exit(1)
+    }
 
     // explode the polyline
     val path = stps.flatMap(x => decodePolyline(x._8)

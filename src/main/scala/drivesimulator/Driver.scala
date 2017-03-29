@@ -170,7 +170,7 @@ class Driver(path: Path, fs: Double = 1.0) {
       .toArray
 
     val ay = ((data.head :: data) :+ data.tail(0)).sliding(3)
-      .map(x => pow(x(1).velocity, 2.0) / Driver.curvatureRadius(x(0).position, x(1).position, x(2).position))
+      .map(x => pow(x(1).velocity, 2.0) / (Driver.curvatureRadius(x(0).position, x(1).position, x(2).position)) + Driver.EPS)
       .toArray
 
     val az = data.map(x => WGS84.gravityLatitudeModel(latitude = x.position._1, altitude = x.altitude))

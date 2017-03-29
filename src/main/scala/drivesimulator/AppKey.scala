@@ -6,6 +6,6 @@ package drivesimulator
 object AppKey {
 
   /// Google APP KEY
-  lazy val APP_KEY = ""
+  lazy val APP_KEY = "AIzaSyB-XuccMIMxy969Hhwb8paAXCO0MTKWG2Y"
 
 }
